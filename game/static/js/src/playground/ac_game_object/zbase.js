@@ -15,14 +15,14 @@ class AcGameObject {
     update() {  // 每一帧均会执行一次
     }
 
-    on_destory() {  // 在销毁前执行一次
+    on_destroy() {  // 在销毁前执行一次
     }
 
-    destory() {  // 删掉该物体
-        this.on_destory();
+    destroy() {  // 删掉该物体
+        this.on_destroy();
 
         for(let i = 0;i < AC_GAME_OBJECT.length;i ++ ) {
-            if(AC_GAME_OBJECT[i] = this) {
+            if(AC_GAME_OBJECT[i] === this) {
                 AC_GAME_OBJECT.splice(i,1);
                 break;
             }
@@ -35,9 +35,9 @@ let AC_GAME_ANIMATION = function(timestamp) {
     for(let i = 0;i < AC_GAME_OBJECT.length;i ++ ) {
         let obj = AC_GAME_OBJECT[i];
 
-        if(obj.hash_called_start == false) {
+        if(!obj.hash_called_start) {
             obj.start();
-            obj.hahs_called_start = true;
+            obj.hash_called_start = true;
         } else {
             obj.timedelta = timestamp - last_timestamp;
             obj.update();
