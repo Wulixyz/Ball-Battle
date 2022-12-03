@@ -17,6 +17,7 @@ class Player extends AcGameObject {
         this.is_me = is_me;
         this.eps = 0.1;
         this.friction = 0.9;
+        this.spent_time = 0;
 
         this.cur_skill = null;
     }
@@ -60,7 +61,7 @@ class Player extends AcGameObject {
         let color = "orange";
         let speed = this.playground.height * 0.5;
         let move_length = this.playground.height * 1.0;
-        new FireBall(this.playground,this,x,y,radius,vx,vy,color,speed,move_length,this.playground.height * 0.01);
+        this.playground.fireballs.push(new FireBall(this.playground,this,x,y,radius,vx,vy,color,speed,move_length,this.playground.height * 0.01));
     }
 
     get_dist(x1,x2,y1,y2) {
@@ -107,6 +108,14 @@ class Player extends AcGameObject {
     }
 
     update() {
+        this.spent_time += this.timedelta / 1000;
+        if(!this.is_me && Math.random() < 1 / 180.0 && this.spent_time > 3) {
+            let player = this.playground.players[0];
+            let dx = player.x + player.vx * player.speed * this.timedelta / 1000 * 0.3;
+            let dy = player.y + player.vy * player.speed * this.timedelta / 1000 * 0.3;
+            this.shout_fireball(dx,dy);
+        }
+
         if(this.damage_speed > 50) {
             this.vx = this.vy = 0;
             this.move_length = 0;
@@ -137,5 +146,13 @@ class Player extends AcGameObject {
         this.ctx.arc(this.x,this.y,this.radius,0,Math.PI * 2,false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
+    }
+
+    on_destroy() {
+        for(let i = 0;i < this.playground.players.length;i ++ ) {
+            if(this === this.playground.players[i]) {
+                this.playground.players.splice(i,1);
+            }
+        }
     }
 }

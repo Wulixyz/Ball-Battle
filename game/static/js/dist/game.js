@@ -147,7 +147,7 @@ class Particle extends AcGameObject {
     }
 
     update() {
-        if(this.move_length < this.eps || this.speed < this.eps) {
+        if(this.move_length < this.eps || this.speed < 80) {
             this.destroy();
             return false;
         }
@@ -186,6 +186,7 @@ class Player extends AcGameObject {
         this.is_me = is_me;
         this.eps = 0.1;
         this.friction = 0.9;
+        this.spent_time = 0;
 
         this.cur_skill = null;
     }
@@ -229,7 +230,7 @@ class Player extends AcGameObject {
         let color = "orange";
         let speed = this.playground.height * 0.5;
         let move_length = this.playground.height * 1.0;
-        new FireBall(this.playground,this,x,y,radius,vx,vy,color,speed,move_length,this.playground.height * 0.01);
+        this.playground.fireballs.push(new FireBall(this.playground,this,x,y,radius,vx,vy,color,speed,move_length,this.playground.height * 0.01));
     }
 
     get_dist(x1,x2,y1,y2) {
@@ -276,6 +277,14 @@ class Player extends AcGameObject {
     }
 
     update() {
+        this.spent_time += this.timedelta / 1000;
+        if(!this.is_me && Math.random() < 1 / 180.0 && this.spent_time > 3) {
+            let player = this.playground.players[0];
+            let dx = player.x + player.vx * player.speed * this.timedelta / 1000 * 0.3;
+            let dy = player.y + player.vy * player.speed * this.timedelta / 1000 * 0.3;
+            this.shout_fireball(dx,dy);
+        }
+
         if(this.damage_speed > 50) {
             this.vx = this.vy = 0;
             this.move_length = 0;
@@ -306,6 +315,14 @@ class Player extends AcGameObject {
         this.ctx.arc(this.x,this.y,this.radius,0,Math.PI * 2,false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
+    }
+
+    on_destroy() {
+        for(let i = 0;i < this.playground.players.length;i ++ ) {
+            if(this === this.playground.players[i]) {
+                this.playground.players.splice(i,1);
+            }
+        }
     }
 }
 class FireBall extends AcGameObject {
@@ -346,6 +363,14 @@ class FireBall extends AcGameObject {
                 this.attach(player);
             }
         }
+
+        for(let i = 0;i < this.playground.fireballs.length;i ++ ) {
+            let fireball = this.playground.fireballs[i];
+            if(this != fireball && this.is_collision(fireball)) {
+                this.is_attached(this);
+                this.is_attached(fireball);
+            }
+        }
         this.render();
     }
 
@@ -355,9 +380,9 @@ class FireBall extends AcGameObject {
         return Math.sqrt(tx * tx + ty * ty);
     }
 
-    is_collision(player) {
-        let distance = this.get_dist(this.x,this.y,player.x,player.y);
-        if(distance < this.radius + player.radius)
+    is_collision(obj) {
+        let distance = this.get_dist(this.x,this.y,obj.x,obj.y);
+        if(distance < this.radius + obj.radius)
             return true;
         return false;
     }
@@ -368,11 +393,34 @@ class FireBall extends AcGameObject {
         this.destroy();
     }
 
+    is_attached(fireball) {
+        for(let i = 0;i < 10 * Math.random() * 5;i ++ ) {
+            let x = fireball.x,y = fireball.y;
+            let radius = fireball.radius * Math.random() * 0.2;
+            let angle = Math.PI * 2 * Math.random();
+            let vx = Math.cos(angle);
+            let vy = Math.sin(angle);
+            let speed = fireball.speed * 5;
+            let move_length = fireball.radius * Math.random() * 5;
+            new Particle(this.playground,x,y,radius,vx,vy,"orange",speed,move_length);
+        }
+
+        fireball.destroy();
+    }
+
     render() {
         this.ctx.beginPath();
         this.ctx.arc(this.x,this.y,this.radius,0,Math.PI * 2,false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
+    }
+
+    on_destroy() {
+        for(let i = 0;i < this.playground.fireballs.length;i ++ ) {
+            if(this == this.playground.fireballs[i]) {
+                this.playground.fireballs.splice(i,1);
+            }
+        }
     }
 }
 class AcGamePlayground {
@@ -386,10 +434,12 @@ class AcGamePlayground {
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
         this.players = [];
+        this.fireballs = [];
+
         this.players.push(new Player(this,this.width / 2,this.height / 2,this.height * 0.05,"white",this.height * 0.15,true));
 
         for(let i = 0;i < 5;i ++ ) {
-            this.players.push(new Player(this,this.width / 2,this.height / 2,this.height * 0.05,this.get_random_color(),this.height * 0.15,false))
+            this.players.push(new Player(this,this.width / 2,this.height / 2,this.height * 0.05,this.get_random_color(),this.height * 0.15,false));
         }
 
         this.start();

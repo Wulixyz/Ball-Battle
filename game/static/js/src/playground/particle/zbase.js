@@ -19,7 +19,7 @@ class Particle extends AcGameObject {
     }
 
     update() {
-        if(this.move_length < this.eps || this.speed < this.eps) {
+        if(this.move_length < this.eps || this.speed < 80) {
             this.destroy();
             return false;
         }

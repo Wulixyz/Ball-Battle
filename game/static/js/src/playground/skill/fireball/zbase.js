@@ -36,6 +36,14 @@ class FireBall extends AcGameObject {
                 this.attach(player);
             }
         }
+
+        for(let i = 0;i < this.playground.fireballs.length;i ++ ) {
+            let fireball = this.playground.fireballs[i];
+            if(this != fireball && this.is_collision(fireball)) {
+                this.is_attached(this);
+                this.is_attached(fireball);
+            }
+        }
         this.render();
     }
 
@@ -45,9 +53,9 @@ class FireBall extends AcGameObject {
         return Math.sqrt(tx * tx + ty * ty);
     }
 
-    is_collision(player) {
-        let distance = this.get_dist(this.x,this.y,player.x,player.y);
-        if(distance < this.radius + player.radius)
+    is_collision(obj) {
+        let distance = this.get_dist(this.x,this.y,obj.x,obj.y);
+        if(distance < this.radius + obj.radius)
             return true;
         return false;
     }
@@ -58,10 +66,33 @@ class FireBall extends AcGameObject {
         this.destroy();
     }
 
+    is_attached(fireball) {
+        for(let i = 0;i < 10 * Math.random() * 5;i ++ ) {
+            let x = fireball.x,y = fireball.y;
+            let radius = fireball.radius * Math.random() * 0.2;
+            let angle = Math.PI * 2 * Math.random();
+            let vx = Math.cos(angle);
+            let vy = Math.sin(angle);
+            let speed = fireball.speed * 5;
+            let move_length = fireball.radius * Math.random() * 5;
+            new Particle(this.playground,x,y,radius,vx,vy,"orange",speed,move_length);
+        }
+
+        fireball.destroy();
+    }
+
     render() {
         this.ctx.beginPath();
         this.ctx.arc(this.x,this.y,this.radius,0,Math.PI * 2,false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
+    }
+
+    on_destroy() {
+        for(let i = 0;i < this.playground.fireballs.length;i ++ ) {
+            if(this == this.playground.fireballs[i]) {
+                this.playground.fireballs.splice(i,1);
+            }
+        }
     }
 }
