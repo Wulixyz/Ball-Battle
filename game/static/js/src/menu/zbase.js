@@ -13,11 +13,12 @@ class AcGameMenu {
         </div>
         <br>
         <div class="ac_game_menu_field_item ac_game_menu_field_item_setting">
-            设置
+            退出
         </div>
     </div>
 </div>
 `);
+        this.$menu.hide();
         this.root.$ac_game.append(this.$menu);
         this.$single_mode = this.$menu.find(".ac_game_menu_field_item_single_mode");
         this.$multi_mode = this.$menu.find(".ac_game_menu_field_item_multi_mode");
@@ -41,6 +42,7 @@ class AcGameMenu {
         });
         this.$setting.click(function(){
             console.log("cleck setting");
+            outer.root.settings.logout_on_remote();
         });
     }
 
