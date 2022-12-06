@@ -586,6 +586,8 @@ class Settings {
 
         this.$register.hide();
 
+        this.$acwing_log = this.$settings.find(".ac_game_settings_acwing img");
+
         this.root.$ac_game.append(this.$settings);
         this.start();
     }
@@ -598,6 +600,7 @@ class Settings {
     add_listening_events() {
         this.add_listening_events_login();
         this.add_listening_events_register();
+        this.add_listening_events_login_acwing();
     }
 
     add_listening_events_login() {
@@ -621,6 +624,14 @@ class Settings {
 
         this.$register_submit.click(function() {
             outer.register_on_remote();
+        });
+    }
+
+    add_listening_events_login_acwing() {
+        let outer = this;
+
+        this.$acwing_log.click(function() {
+            outer.acwing_login();
         });
     }
 
@@ -684,6 +695,19 @@ class Settings {
                 console.log(resp);
                 if(resp.result === "success") {
                     location.reload();
+                }
+            }
+        });
+    }
+
+    acwing_login() {
+        $.ajax({
+            url: "https://app4146.acapp.acwing.com.cn/settings/acwing/web/apply_code/",
+            type: "GET",
+            success: function(resp) {
+                console.log(resp);
+                if(resp.result === "success") {
+                    window.location.replace(resp.apply_code_url);
                 }
             }
         });

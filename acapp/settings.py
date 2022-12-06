@@ -30,6 +30,17 @@ ALLOWED_HOSTS = ["120.53.20.57","app4146.acapp.acwing.com.cn"]
 
 # Application definition
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
+USER_AGENTS_CACHE = 'default'
+
 INSTALLED_APPS = [
     'game.apps.GameConfig',
     'django.contrib.admin',
