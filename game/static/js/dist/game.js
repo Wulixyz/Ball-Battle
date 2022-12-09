@@ -593,8 +593,12 @@ class Settings {
     }
 
     start() {
-        this.getinfo();
-        this.add_listening_events();
+        if(this.platform === "ACAPP") {
+            this.getinfo_acapp();
+        } else {
+            this.getinfo_web();
+            this.add_listening_events();
+        }
     }
 
     add_listening_events() {
@@ -700,7 +704,7 @@ class Settings {
         });
     }
 
-    acwing_login() {
+    acwing_login() {  // 在远程服务器上登录——AcWing
         $.ajax({
             url: "https://app4146.acapp.acwing.com.cn/settings/acwing/web/apply_code/",
             type: "GET",
@@ -723,7 +727,35 @@ class Settings {
         this.$login.show();
     }
 
-    getinfo() {
+    acapp_login(appid,redirect_uri,scope,state) {
+        let outer = this;
+
+        this.root.AcWingOS.api.oauth2.authorize(appid,redirect_uri,scope,state,function(resp) {
+            console.log(resp);
+
+            if(resp.result === "success") {
+                outer.username = resp.username;
+                outer.photo = resp.photo;
+                outer.hide();
+                outer.root.menu.show();
+            }
+        });
+    }
+
+    getinfo_acapp() {
+        let outer = this;
+        $.ajax({
+            url: "https://app4146.acapp.acwing.com.cn/settings/acwing/acapp/apply_code/",
+            type: "GET",
+            success: function(resp) {
+                if(resp.result === "success") {
+                    outer.acapp_login(resp.appid,resp.redirect_uri,resp.scope,resp.state);
+                }
+            }
+        });
+    }
+
+    getinfo_web() {
         let outer = this;
         $.ajax({
             url: "https://app4146.acapp.acwing.com.cn/settings/getinfo/",
