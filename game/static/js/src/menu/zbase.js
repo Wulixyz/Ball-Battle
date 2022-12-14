@@ -5,11 +5,11 @@ class AcGameMenu {
 <div class="ac_game_menu">
     <div class="ac_game_menu_field">
         <div class="ac_game_menu_field_item ac_game_menu_field_item_single_mode">
-            独自享受
+            单人游戏
         </div>
         <br>
         <div class="ac_game_menu_field_item ac_game_menu_field_item_multi_mode">
-            多人运动
+            多人游戏
         </div>
         <br>
         <div class="ac_game_menu_field_item ac_game_menu_field_item_setting">
@@ -35,10 +35,11 @@ class AcGameMenu {
         let outer = this;
         this.$single_mode.click(function(){
             outer.hide();
-            outer.root.playground.show();
+            outer.root.playground.show("single mode");
         });
         this.$multi_mode.click(function(){
-            console.log("cleck multi_mode");
+            outer.hide();
+            outer.root.playground.show("multi mode");
         });
         this.$setting.click(function(){
             console.log("cleck setting");

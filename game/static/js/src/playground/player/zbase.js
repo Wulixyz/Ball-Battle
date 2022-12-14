@@ -1,5 +1,5 @@
 class Player extends AcGameObject {
-    constructor (playground,x,y,radius,color,speed,is_me) {
+    constructor (playground,x,y,radius,color,speed,character,username,photo) {
         super();
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -14,21 +14,23 @@ class Player extends AcGameObject {
         this.radius = radius;
         this.color = color;
         this.speed = speed;
-        this.is_me = is_me;
+        this.character = character;
+        this.username = username;
+        this.photo = photo;
         this.eps = 0.01;
         this.friction = 0.9;
         this.spent_time = 0;
 
         this.cur_skill = null;
 
-        if(this.is_me) {
+        if(this.character !== "robot") {
             this.img = new Image();
-            this.img.src = this.playground.root.settings.photo;
+            this.img.src = this.photo;
         }
     }
 
     start() {
-        if(this.is_me) {
+        if(this.character === "me") {
             this.add_listening_events();
         } else {
             this.move_to_random();
@@ -120,7 +122,7 @@ class Player extends AcGameObject {
 
     update_move() {
         this.spent_time += this.timedelta / 1000;
-        if(!this.is_me && Math.random() < 1 / 180.0 && this.spent_time > 3) {
+        if(this.character === "robot" && Math.random() < 1 / 180.0 && this.spent_time > 3) {
             let player = this.playground.players[0];
             let dx = player.x + player.vx * player.speed * this.timedelta / 1000 * 0.3;
             let dy = player.y + player.vy * player.speed * this.timedelta / 1000 * 0.3;
@@ -135,7 +137,7 @@ class Player extends AcGameObject {
             this.damage_speed *= this.friction;
         } else {
             if(this.move_length < this.eps) {
-                if(this.is_me) {
+                if(this.character === "me") {
                     this.move_length = 0;
                     this.vx = 0;
                     this.vy = 0;
@@ -154,7 +156,7 @@ class Player extends AcGameObject {
     render() {
         let scale = this.playground.scale;
 
-        if(this.is_me) {
+        if(this.character !== "robot") {
             this.ctx.save();
             this.ctx.beginPath();
             this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
