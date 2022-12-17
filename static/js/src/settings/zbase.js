@@ -207,18 +207,20 @@ class Settings {
     }
 
     logout_on_remote() {  // 在远程服务器上登出
-        if(this.platform === "ACAPP") return false;
-
-        $.ajax({
-            url: "https://app4146.acapp.acwing.com.cn/settings/signout/",
-            type: "GET",
-            success: function(resp) {
-                console.log(resp);
-                if(resp.result === "success") {
-                    location.reload();
+        if(this.platform === "ACAPP") {
+            this.root.AcWingOS.api.window.close();
+        } else {
+            $.ajax({
+                url: "https://app4146.acapp.acwing.com.cn/settings/signout/",
+                type: "GET",
+                success: function(resp) {
+                    console.log(resp);
+                    if(resp.result === "success") {
+                        location.reload();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     acwing_login() {  // 在远程服务器上登录——AcWing
