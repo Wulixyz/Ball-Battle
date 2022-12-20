@@ -817,6 +817,7 @@ class MultiplayerSocket {
     }
 
     receive_create_player(uuid,username,photo) {
+        console.log("receive_create_player");
         let player = new Player(this.playground,this.playground.width / 2 / this.playground.scale,0.5,0.05,"white",0.15,"enemy",username,photo);
 
         player.uuid = uuid;
@@ -912,7 +913,6 @@ class MultiplayerSocket {
     }
 
     receive_message(uuid,text) {
-        console.log("receive_message");
         let player = this.find_player(uuid);
         if(player) {
             player.playground.chat_field.add_message(uuid,text);
