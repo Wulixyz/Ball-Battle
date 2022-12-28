@@ -144,12 +144,10 @@ class Player extends AcGameObject {
         let speed = 0.5;
         let move_length = 1.0;
 
-        if(this.character === "me") radius = 50;
-
         let fireball = new FireBall(this.playground,this,x,y,radius,vx,vy,color,speed,move_length,0.01);
         this.fireballs.push(fireball);
 
-        // this.fireball_coldtime = 3;
+        this.fireball_coldtime = 3;
 
         return fireball;
     }
