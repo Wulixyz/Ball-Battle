@@ -1149,7 +1149,7 @@ class Settings {
         </div>
         <br>
         <div class="ac_game_settings_acwing">
-            <img width="30" src="https://app4146.acapp.acwing.com.cn/static/image/settings/acwing_log.png">
+            <img width="30" src="https://app6884.acapp.acwing.com.cn/static/image/settings/acwing_log.png">
             <br>
             <br>
             <div>
@@ -1188,7 +1188,7 @@ class Settings {
         </div>
         <br>
         <div class="ac_game_settings_acwing">
-            <img width="30" src="https://app4146.acapp.acwing.com.cn/static/image/settings/acwing_log.png">
+            <img width="30" src="https://app6884.acapp.acwing.com.cn/static/image/settings/acwing_log.png">
             <br>
             <br>
             <div>
@@ -1241,7 +1241,7 @@ class Settings {
     refresh_jwt_token() {
         setInterval(() => {
             $.ajax({
-                url: "https://app4146.acapp.acwing.com.cn/settings/token/refresh/",
+                url: "https://app6884.acapp.acwing.com.cn/settings/token/refresh/",
                 type: "post",
                 data: {
                     refresh: this.root.refresh,
@@ -1254,7 +1254,7 @@ class Settings {
 
         setTimeout(() => {
             $.ajax({
-                url: "https://app4146.acapp.acwing.com.cn/settings/ranklist/",
+                url: "https://app6884.acapp.acwing.com.cn/settings/ranklist/",
                 type: "get",
                 headers: {
                     'Authorization': "Bearer " + this.root.access,
@@ -1310,7 +1310,7 @@ class Settings {
         this.$login_error_message.empty();
 
         $.ajax({
-            url: "https://app4146.acapp.acwing.com.cn/settings/token/",
+            url: "https://app6884.acapp.acwing.com.cn/settings/token/",
             type: "post",
             data: {
                 username: username,
@@ -1336,7 +1336,7 @@ class Settings {
         this.$register_error_message.empty();
 
         $.ajax({
-            url: "https://app4146.acapp.acwing.com.cn/settings/register/",
+            url: "https://app6884.acapp.acwing.com.cn/settings/register/",
             type: "post",
             data: {
                 username: username,
@@ -1365,7 +1365,7 @@ class Settings {
 
     acwing_login() {  // 在远程服务器上登录——AcWing
         $.ajax({
-            url: "https://app4146.acapp.acwing.com.cn/settings/acwing/web/apply_code/",
+            url: "https://app6884.acapp.acwing.com.cn/settings/acwing/web/apply_code/",
             type: "GET",
             success: function(resp) {
                 console.log(resp);
@@ -1405,7 +1405,7 @@ class Settings {
     getinfo_acapp() {
         let outer = this;
         $.ajax({
-            url: "https://app4146.acapp.acwing.com.cn/settings/acwing/acapp/apply_code/",
+            url: "https://app6884.acapp.acwing.com.cn/settings/acwing/acapp/apply_code/",
             type: "GET",
             success: function(resp) {
                 if(resp.result === "success") {
@@ -1418,7 +1418,7 @@ class Settings {
     getinfo_web() {
         let outer = this;
         $.ajax({
-            url: "https://app4146.acapp.acwing.com.cn/settings/getinfo/",
+            url: "https://app6884.acapp.acwing.com.cn/settings/getinfo/",
             type: "get",
             data: {
                 platform: outer.platform,
